@@ -4,10 +4,10 @@
 package sexpr
 
 import (
-	"fmt"
-	"utf8"
 	"bytes"
+	"fmt"
 	"unicode"
+	"unicode/utf8"
 )
 
 const EOF = -1
