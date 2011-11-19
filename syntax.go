@@ -11,24 +11,30 @@ type SyntaxFunc func(*Lexer) int
 type Syntax struct {
 	// A set of list delimiters. These are pairs of strings denoting the
 	// start and end of an S-expression.
+	// E.g.: "(", ")"
 	Delimiters [][2]string
 
 	// This string starts a single line comment.
-	// A single line runs until the end of a line.
+	// A single line comment runs until the end of a line.
+	// E.g: "//"
 	SingleLineComment string
 
-	// These strings denotes what a multi-line comment looks starts with
+	// These strings denote what a multi-line comment starts with
 	// and ends with.
+	// E.g.: "/*", "*/"
 	MultiLineComment []string
 
 	// These strings determine how a string literal starts and ends.
+	// E.g.: "abc".
 	StringLit []string
 
 	// These strings determine how a raw string literal starts and ends.
 	// A raw string does not have its escape sequences parsed.
+	// E.g.: `abc`.
 	RawStringLit []string
 
 	// These strings determine how a char literal starts and ends.
+	// E.g.: 'a'.
 	CharLit []string
 
 	// This function should return whether or not the given
