@@ -4,8 +4,8 @@
 package sexpr
 
 import (
-	"time"
 	"testing"
+	"time"
 )
 
 func TestParse(t *testing.T) {
@@ -28,12 +28,12 @@ func testFile(t *testing.T, file string, syntax *Syntax) {
 	var ast AST
 	var err error
 
-	st := time.Nanoseconds()
+	st := time.Now()
 
 	if err = Parse(&ast, file, syntax); err != nil {
 		t.Error(err)
 	}
 
 	//println(ast.String())
-	println(time.Nanoseconds() - st)
+	println(time.Now().Sub(st))
 }
