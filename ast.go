@@ -4,8 +4,8 @@
 package sexpr
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 )
 
 // An abstract syntax tree.

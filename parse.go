@@ -69,7 +69,7 @@ func Parse(ast *AST, file string, syntax *Syntax) (err error) {
 			}
 
 			node.Children = append(node.Children, &Node{
-				File:  uint8(fileindex),
+				File: uint8(fileindex),
 				Line: tok.Line,
 				Col:  tok.Col,
 				Data: tok.Data,
