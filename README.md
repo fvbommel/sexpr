@@ -61,12 +61,6 @@ For an example of how to use this package, refer to `sexpr_test.go`.
 
 None.
 
-## Build
-
-    $ goinstall github.com/jteeuwen/sexpr
-
-    import "github.com/jteeuwen/sexpr"
-
 ## License
 
 Unless otherwise stated, all of the work in this project is subject to a
