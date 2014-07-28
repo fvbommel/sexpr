@@ -47,6 +47,11 @@ func parseData(ast *AST, data []byte, syntax *Syntax, fileindex int) (err error)
 	for {
 		lex.Next(&tok)
 
+		// This would lead to an infinite loop otherwise.
+		if len(tok.Data) == 0 && tok.Type != TokEof && tok.Type != TokErr {
+			tok.Type = TokErr
+		}
+
 		switch tok.Type {
 		case TokEof:
 			return

@@ -66,6 +66,11 @@ func (l *Lexer) Next(tok *Token) {
 
 	l.Ignore() // Ignore whatever is in the buffer.
 
+	if l.pos >= len(l.data) {
+		l.emit(tok, TokEof)
+		return
+	}
+
 	// Do we have a single-line comment?
 	if len(l.syntax.SingleLineComment) > 0 {
 		if ret = l.AcceptLiteral(l.syntax.SingleLineComment); ret == EOF {
@@ -173,7 +178,7 @@ func (l *Lexer) Next(tok *Token) {
 		return
 	}
 
-	// This will only occur with really unorthodox runes.'
+	// This will only occur with really unorthodox runes.
 	// They will most likely indicate an utf8 decoding error or
 	// that we have been reading a binary file.
 	l.errorf(tok, "Unexpected character %q", l.NextRune())
@@ -280,7 +285,7 @@ func (l *Lexer) AcceptUntil(valid string) int {
 // AcceptLiteral consumes runes if they are an exact, rune-for-rune match with
 // the supplied string.
 func (l *Lexer) AcceptLiteral(valid string) int {
-	if len(valid) == 0 || l.pos+len(valid) >= len(l.data) {
+	if len(valid) == 0 || l.pos+len(valid) > len(l.data) {
 		return 0
 	}
 
@@ -330,7 +335,10 @@ func (l *Lexer) AcceptIdent() int {
 
 		if l.syntax.IsReserved(r) || unicode.IsSpace(r) || !unicode.IsGraphic(r) {
 			l.Rewind()
-			return 1
+			if l.start != l.pos {
+				return 1
+			}
+			return 0
 		}
 	}
 }

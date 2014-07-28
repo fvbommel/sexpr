@@ -49,3 +49,38 @@ func testFile(t *testing.T, file string, syntax *Syntax) {
 	//println(ast.String())
 	t.Log(file, "([]byte)", time.Now().Sub(st))
 }
+
+func TestShortParse(t *testing.T) {
+	s := new(Syntax)
+	s.StringLit = []string{"\"", "\""}
+	s.Delimiters = [][2]string{{"(", ")"}}
+	s.NumberFunc = LexNumber
+	s.BooleanFunc = LexBoolean
+
+	var ast AST
+	err := ParseString(&ast, "(a)", s)
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+
+	n := &ast.Root
+	if len(n.Children) != 1 {
+		t.Errorf("Expected one child of root node, got %d", len(n.Children))
+		t.FailNow()
+	}
+
+	n = n.Children[0]
+	if len(n.Children) != 1 {
+		t.Errorf("Expected one child, got %d", len(n.Children))
+	}
+
+	n = n.Children[0]
+	if n.Type != TokIdent {
+		t.Errorf("Expected an identifier, got %s", n.Type)
+	}
+
+	if len(n.Data) != 1 || n.Data[0] != 'a' {
+		t.Errorf("Expected identifier `a`, got %+q", n.Data)
+	}
+}
