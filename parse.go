@@ -35,6 +35,13 @@ func Parse(ast *AST, data []byte, syntax *Syntax) (err error) {
 	return parseData(ast, data, syntax, fileindex)
 }
 
+// ParseString processes the given data and stores all the nodes it finds in
+// the given AST instance. The parser uses the given syntax rule set to
+// perform the parsing.
+func ParseString(ast *AST, data string, syntax *Syntax) (err error) {
+	return Parse(ast, []byte(data), syntax)
+}
+
 // parseData processes the given data and stores all the nodes it finds in
 // the given AST instance. The parser uses the given syntax rule set to
 // perform the parsing.
