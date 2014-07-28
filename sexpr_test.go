@@ -4,6 +4,7 @@
 package sexpr
 
 import (
+	"io/ioutil"
 	"testing"
 	"time"
 )
@@ -30,10 +31,21 @@ func testFile(t *testing.T, file string, syntax *Syntax) {
 
 	st := time.Now()
 
-	if err = Parse(&ast, file, syntax); err != nil {
+	if err = ParseFile(&ast, file, syntax); err != nil {
 		t.Error(err)
 	}
 
 	//println(ast.String())
-	println(time.Now().Sub(st))
+	t.Log(file, "(file)  ", time.Now().Sub(st))
+
+	ast = AST{} // reset
+	st = time.Now()
+	if data, err := ioutil.ReadFile(file); err != nil {
+		t.Error(err)
+	} else if err = Parse(&ast, data, syntax); err != nil {
+		t.Error(err)
+	}
+
+	//println(ast.String())
+	t.Log(file, "([]byte)", time.Now().Sub(st))
 }

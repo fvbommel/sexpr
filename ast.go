@@ -23,17 +23,17 @@ type AST struct {
 	Files []string
 }
 
-// hasFile returns false if the given file is already present in the
-// ast.Files list.
-func (a *AST) addFile(file string) int {
+// addFile tries to add a file to the AST if not yet present. It returns its
+// index in the AST.Files list and whether it was newly added.
+func (a *AST) addFile(file string) (idx int, new bool) {
 	for i := range a.Files {
 		if a.Files[i] == file {
-			return -1
+			return i, false
 		}
 	}
 
 	a.Files = append(a.Files, file)
-	return len(a.Files) - 1
+	return len(a.Files) - 1, true
 }
 
 func (a *AST) String() string {

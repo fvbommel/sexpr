@@ -8,23 +8,39 @@ import (
 	"io/ioutil"
 )
 
-// Parse processes the given file and stores all the nodes it finds in
+// ParseFile processes the given file and stores all the nodes it finds in
 // the given AST instance. The parser uses the given syntax rule set to
 // perform the parsing.
-func Parse(ast *AST, file string, syntax *Syntax) (err error) {
-	fileindex := ast.addFile(file)
+func ParseFile(ast *AST, file string, syntax *Syntax) (err error) {
+	fileindex, new := ast.addFile(file)
 
-	if fileindex == -1 {
+	if !new {
 		return fmt.Errorf("Parsing duplicate file %q", file)
 	}
 
-	var tok Token
-	var node *Node
-	var data []byte
-
-	if data, err = ioutil.ReadFile(file); err != nil {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
 		return
 	}
+
+	return parseData(ast, data, syntax, fileindex)
+}
+
+// Parse processes the given data and stores all the nodes it finds in
+// the given AST instance. The parser uses the given syntax rule set to
+// perform the parsing.
+func Parse(ast *AST, data []byte, syntax *Syntax) (err error) {
+	fileindex, _ := ast.addFile("<raw data>")
+
+	return parseData(ast, data, syntax, fileindex)
+}
+
+// parseData processes the given data and stores all the nodes it finds in
+// the given AST instance. The parser uses the given syntax rule set to
+// perform the parsing.
+func parseData(ast *AST, data []byte, syntax *Syntax, fileindex int) (err error) {
+	var tok Token
+	var node *Node
 
 	lex := NewLexer(data, syntax)
 
@@ -36,7 +52,7 @@ func Parse(ast *AST, file string, syntax *Syntax) (err error) {
 			return
 
 		case TokErr:
-			return NewParseError(file, tok.Line, tok.Col, string(tok.Data))
+			return NewParseError(ast.Files[fileindex], tok.Line, tok.Col, string(tok.Data))
 
 		case TokListOpen:
 			n := &Node{
@@ -59,7 +75,7 @@ func Parse(ast *AST, file string, syntax *Syntax) (err error) {
 
 		default:
 			if node == nil {
-				return NewParseError(file, tok.Line, tok.Col,
+				return NewParseError(ast.Files[fileindex], tok.Line, tok.Col,
 					"Unexpected token %s; expected %s", tok, TokListOpen)
 			}
 
