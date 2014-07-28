@@ -275,8 +275,6 @@ func (l *Lexer) AcceptUntil(valid string) int {
 			return 1
 		}
 	}
-
-	return 0
 }
 
 // AcceptLiteral consumes runes if they are an exact, rune-for-rune match with
@@ -335,8 +333,6 @@ func (l *Lexer) AcceptIdent() int {
 			return 1
 		}
 	}
-
-	return 1
 }
 
 // AcceptSpace consumes runes for as long as they are whitespace.

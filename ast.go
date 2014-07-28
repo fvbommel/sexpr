@@ -18,7 +18,7 @@ type AST struct {
 	// The generated data is then merged with the existing AST.
 	//
 	// Each node retains line/column information from the source it came from.
-	// Additionally, it will have an integer index into this list of 
+	// Additionally, it will have an integer index into this list of
 	// file names.
 	Files []string
 }

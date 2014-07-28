@@ -77,6 +77,4 @@ func Parse(ast *AST, file string, syntax *Syntax) (err error) {
 			})
 		}
 	}
-
-	return
 }
